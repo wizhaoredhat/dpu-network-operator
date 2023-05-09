@@ -133,6 +133,8 @@ spec:
           # TENANT_K8S_NODE, DPU_IP and MGMT_IFNAME shall be defined in env-overrides
           OVNKUBE_NODE_MGMT_PORT_NETDEV="--ovnkube-node-mgmt-port-netdev ${MGMT_IFNAME}"
 
+          echo "WZ DPU_IP = ${DPU_IP}"
+          echo "WZ NODE_IP = ${NODE_IP}"
           exec /usr/bin/ovnkube --init-node "${TENANT_K8S_NODE}" --encap-ip "${DPU_IP}" \
             --nb-address "{{.OVN_NB_DB_LIST}}" \
             --sb-address "{{.OVN_SB_DB_LIST}}" \
@@ -167,6 +169,10 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.name
+        - name: NODE_IP
+          valueFrom:
+             fieldRef:
+               fieldPath: status.hostIP
         ports:
         - name: metrics-port
           containerPort: 29103
