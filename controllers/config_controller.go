@@ -455,14 +455,14 @@ func (r *DpuClusterConfigReconciler) getTenantClusterMasterIPs(timeout int) ([]s
 
 		heartBeat++
 		if heartBeat%3 == 0 {
-			logger.Info("Waiting to complete OVN bootstrap: found (%d) master nodes out of (%d) expected: timing out in %d seconds",
-				len(masterNodeList.Items), controlPlaneReplicaCount, timeout-OVN_MASTER_DISCOVERY_POLL*heartBeat)
+			logger.Info("Waiting to complete OVN bootstrap:",
+				"NumMaster", len(masterNodeList.Items), "ControlPlaneNodes", controlPlaneReplicaCount, "Timeout", timeout-OVN_MASTER_DISCOVERY_POLL*heartBeat)
 		}
 		return false, nil
 	})
 	if wait.Interrupted(err) {
-		logger.Info("Timeout exceeded while bootstraping OVN, expected amount of control plane nodes (%v) do not match found (%v): continuing deployment with found replicas",
-			controlPlaneReplicaCount, len(masterNodeList.Items)) // TODO should be a warning
+		logger.Info("Timeout exceeded while bootstraping OVN, expected amount of control plane nodes do not match found: continuing deployment with found replicas",
+			"ControlPlaneNodes", controlPlaneReplicaCount, "MasterNodeList", len(masterNodeList.Items)) // TODO should be a warning
 		// On certain types of cluster this condition will never be met (assisted installer, for example)
 		// As to not hold the reconciliation loop for too long on such clusters: dynamically modify the timeout
 		// to a shorter and shorter value. Never reach 0 however as that will result in a `PollInfinity`.
@@ -501,7 +501,7 @@ func (r *DpuClusterConfigReconciler) getTenantClusterMasterIPs(timeout int) ([]s
 		}
 		ovnMasterAddresses = append(ovnMasterAddresses, ni.address)
 	}
-	logger.Info("Preferring %s for database clusters", ovnMasterAddresses)
+	logger.Info("WZ Preferring database clusters", "MasterAddresses", ovnMasterAddresses)
 
 	return ovnMasterAddresses, timeout, nil
 }
