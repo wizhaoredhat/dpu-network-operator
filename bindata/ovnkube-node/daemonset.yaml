@@ -774,9 +774,10 @@ spec:
           fi
 
           # TENANT_K8S_NODE, shall be defined in env-overrides
-          exec /usr/bin/ovnkube --init-node "${K8S_NODE}" \
+          exec /usr/bin/ovnkube --init-node "${TENANT_K8S_NODE}" --encap-ip "${NODE_IP}" \
             --config-file=/run/ovnkube-config/ovnkube.conf \
             --loglevel "${OVN_KUBE_LOG_LEVEL}" \
+            --k8s-kubeconfig=/var/run/secrets/tenant-kubeconfig/config \
             --inactivity-probe="${OVN_CONTROLLER_INACTIVITY_PROBE}" \
             ${gateway_mode_flags} \
             ${OVNKUBE_NODE_MODE} \
