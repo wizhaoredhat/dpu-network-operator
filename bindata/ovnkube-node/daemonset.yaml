@@ -676,6 +676,9 @@ spec:
         - mountPath: /etc/systemd/system
           name: systemd-units
           readOnly: true
+        - mountPath: /var/run/secrets/tenant-kubeconfig
+          name: tenant-kubeconfig
+          readOnly: true
         - mountPath: /etc/openvswitch/
           name: etc-openvswitch
         - mountPath: /etc/ovn/
