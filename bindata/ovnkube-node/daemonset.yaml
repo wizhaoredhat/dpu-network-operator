@@ -763,24 +763,6 @@ spec:
           ip6tables -t raw -A PREROUTING -p udp --dport 6081 -j NOTRACK
           ip6tables -t raw -A OUTPUT -p udp --dport 6081 -j NOTRACK
 
-          retries=0
-          while true; do
-            # TODO: change to use '--request-timeout=30s', if https://github.com/kubernetes/kubernetes/issues/49343 is fixed. 
-            db_ip=$(timeout 30 kubectl get --kubeconfig=/var/run/secrets/tenant-kubeconfig/config ep  -n ${ovn_config_namespace} ovnkube-db -o jsonpath='{.subsets[0].addresses[0].ip}')
-            if [[ -n "${db_ip}" ]]; then
-              break
-            fi
-            (( retries += 1 ))
-            if [[ "${retries}" -gt 40 ]]; then
-              echo "E$(date "+%m%d %H:%M:%S.%N") - db endpoint never came up"
-              exit 1
-            fi
-            echo "I$(date "+%m%d %H:%M:%S.%N") - waiting for db endpoint"
-            sleep 5
-          done
-
-          echo "I$(date "+%m%d %H:%M:%S.%N") - starting ovnkube-node db_ip ${db_ip}"
-
           gateway_mode_flags="--gateway-mode shared --gateway-interface br-ex"
 
           OVNKUBE_NODE_MODE="--ovnkube-node-mode dpu"

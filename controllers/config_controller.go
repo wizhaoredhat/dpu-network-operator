@@ -276,7 +276,7 @@ func (r *DpuClusterConfigReconciler) syncOvnkubeDaemonSet(ctx context.Context, c
 	// - name: KUBE_RBAC_PROXY_IMAGE
 	//   value: "quay.io/openshift/origin-kube-rbac-proxy:latest"
 	// https://github.com/openshift/cluster-network-operator/blob/master/manifests/0000_70_cluster-network-operator_03_deployment.yaml#L69-L70
-	data.Data["KubeRBACProxyImage"] = "quay.io/openshift/origin-kube-rbac-proxy:latest" // os.Getenv("KUBE_RBAC_PROXY_IMAGE")
+	data.Data["KubeRBACProxyImage"] = "registry.redhat.io/openshift4/ose-kube-rbac-proxy" // os.Getenv("KUBE_RBAC_PROXY_IMAGE")
 
 	data.Data["OvnKubeImage"] = image
 	data.Data["Namespace"] = cfg.Namespace
